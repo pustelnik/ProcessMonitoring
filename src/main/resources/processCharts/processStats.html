@@ -1,0 +1,390 @@
+<!doctype html>
+<html>
+<head>
+    <script src="Chart.bundle.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="data.js"></script>
+    <style>
+        .canvas{
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+        .stats {
+            width: 80%;
+            margin-bottom: 10%;
+        }
+    </style>
+</head>
+<body>
+<script>
+    var randomColorFactor = function() {
+        return Math.round(Math.random() * 255);
+    };
+
+    var randomColor = function(opacity) {
+        return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
+    };
+
+    function getCpuDatasets(processes) {
+        var data = [];
+        for(i = 0; i < processes.length; i++) {
+            data.push({
+                label: processes[i].processName,
+                data: processes[i].cpu,
+                fill: false
+            });
+        }
+        return data;
+    }
+
+    function getMemDatasets(processes) {
+        var data = [];
+        for(i = 0; i < processes.length; i++) {
+            data.push({
+                label: processes[i].processName,
+                data: processes[i].mem,
+                fill: false
+            });
+        }
+        return data;
+    }
+
+    function getRssDatasets(processes) {
+        var data = [];
+        for(i = 0; i < processes.length; i++) {
+            data.push({
+                label: processes[i].processName,
+                data: processes[i].rss,
+                fill: false
+            });
+        }
+        return data;
+    }
+
+    function getVszDatasets(processes) {
+        var data = [];
+        for(i = 0; i < processes.length; i++) {
+            data.push({
+                label: processes[i].processName,
+                data: processes[i].vsz,
+                fill: false
+            });
+        }
+        return data;
+    }
+
+    var cpuConfig = {
+        type: 'line',
+        data: {
+            labels: processStat.processes[0].time,
+            datasets: getCpuDatasets(processStat.processes)
+        },
+        options: {
+            responsive: true,
+            title:{
+                display:true,
+                text: "%CPU"
+            },
+            tooltips: {
+                mode: 'label',
+                callbacks: {
+                    // beforeTitle: function() {
+                    //     return '...beforeTitle';
+                    // },
+                    // afterTitle: function() {
+                    //     return '...afterTitle';
+                    // },
+                    // beforeBody: function() {
+                    //     return '...beforeBody';
+                    // },
+                    // afterBody: function() {
+                    //     return '...afterBody';
+                    // },
+                    // beforeFooter: function() {
+                    //     return '...beforeFooter';
+                    // },
+                    // footer: function() {
+                    //     return 'Footer';
+                    // },
+                    // afterFooter: function() {
+                    //     return '...afterFooter';
+                    // },
+                }
+            },
+            hover: {
+                mode: 'dataset'
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Time'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: '%'
+                    },
+                    ticks: {
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                }]
+            }
+        }
+    };
+
+    var memConfig = {
+        type: 'line',
+        data: {
+            labels: processStat.processes[0].time,
+            datasets: getMemDatasets(processStat.processes)
+        },
+        options: {
+            responsive: true,
+            title:{
+                display:true,
+                text: "%MEM"
+            },
+            tooltips: {
+                mode: 'label',
+                callbacks: {
+                    // beforeTitle: function() {
+                    //     return '...beforeTitle';
+                    // },
+                    // afterTitle: function() {
+                    //     return '...afterTitle';
+                    // },
+                    // beforeBody: function() {
+                    //     return '...beforeBody';
+                    // },
+                    // afterBody: function() {
+                    //     return '...afterBody';
+                    // },
+                    // beforeFooter: function() {
+                    //     return '...beforeFooter';
+                    // },
+                    // footer: function() {
+                    //     return 'Footer';
+                    // },
+                    // afterFooter: function() {
+                    //     return '...afterFooter';
+                    // },
+                }
+            },
+            hover: {
+                mode: 'dataset'
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Process stats'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: '%'
+                    },
+                    ticks: {
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                }]
+            }
+        }
+    };
+
+    var vszConfig = {
+        type: 'line',
+        data: {
+            labels: processStat.processes[0].time,
+            datasets: getVszDatasets(processStat.processes)
+        },
+        options: {
+            responsive: true,
+            title:{
+                display:true,
+                text: "VSZ"
+            },
+            tooltips: {
+                mode: 'label',
+                callbacks: {
+                    // beforeTitle: function() {
+                    //     return '...beforeTitle';
+                    // },
+                    // afterTitle: function() {
+                    //     return '...afterTitle';
+                    // },
+                    // beforeBody: function() {
+                    //     return '...beforeBody';
+                    // },
+                    // afterBody: function() {
+                    //     return '...afterBody';
+                    // },
+                    // beforeFooter: function() {
+                    //     return '...beforeFooter';
+                    // },
+                    // footer: function() {
+                    //     return 'Footer';
+                    // },
+                    // afterFooter: function() {
+                    //     return '...afterFooter';
+                    // },
+                }
+            },
+            hover: {
+                mode: 'dataset'
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Time'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'KiB'
+                    },
+                    ticks: {
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                }]
+            }
+        }
+    };
+
+    var rssConfig = {
+        type: 'line',
+        data: {
+            labels: processStat.processes[0].time,
+            datasets: getRssDatasets(processStat.processes)
+        },
+        options: {
+            responsive: true,
+            title:{
+                display:true,
+                text: "RSS"
+            },
+            tooltips: {
+                mode: 'label',
+                callbacks: {
+                    // beforeTitle: function() {
+                    //     return '...beforeTitle';
+                    // },
+                    // afterTitle: function() {
+                    //     return '...afterTitle';
+                    // },
+                    // beforeBody: function() {
+                    //     return '...beforeBody';
+                    // },
+                    // afterBody: function() {
+                    //     return '...afterBody';
+                    // },
+                    // beforeFooter: function() {
+                    //     return '...beforeFooter';
+                    // },
+                    // footer: function() {
+                    //     return 'Footer';
+                    // },
+                    // afterFooter: function() {
+                    //     return '...afterFooter';
+                    // },
+                }
+            },
+            hover: {
+                mode: 'dataset'
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Time'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'KiB'
+                    },
+                    ticks: {
+                        suggestedMin: 0,
+                        suggestedMax: 250,
+                    }
+                }]
+            }
+        }
+    };
+
+
+    $.each(cpuConfig.data.datasets,function(i, dataset) {
+        dataset.borderColor = randomColor(0.4);
+        dataset.backgroundColor = randomColor(0.5);
+        dataset.pointBorderColor = dataset.borderColor;
+        dataset.pointBackgroundColor = dataset.backgroundColor;
+        dataset.pointBorderWidth = 1;
+    });
+    $.each(memConfig.data.datasets,function(i, dataset) {
+        dataset.borderColor = randomColor(0.4);
+        dataset.backgroundColor = randomColor(0.5);
+        dataset.pointBorderColor = dataset.borderColor;
+        dataset.pointBackgroundColor = dataset.backgroundColor;;
+        dataset.pointBorderWidth = 1;
+    });
+    $.each(rssConfig.data.datasets,function(i, dataset) {
+        dataset.borderColor = randomColor(0.4);
+        dataset.backgroundColor = randomColor(0.5);
+        dataset.pointBorderColor = dataset.borderColor;
+        dataset.pointBackgroundColor = dataset.backgroundColor;
+        dataset.pointBorderWidth = 2;
+    });
+    $.each(vszConfig.data.datasets,function(i, dataset) {
+        dataset.borderColor = randomColor(0.4);
+        dataset.backgroundColor = randomColor(0.5);
+        dataset.pointBorderColor = dataset.borderColor;
+        dataset.pointBackgroundColor = dataset.backgroundColor;
+        dataset.pointBorderWidth = 1;
+    });
+
+    window.onload = function() {
+        var cpuCtx = document.getElementById("canvas_cpu").getContext("2d");
+        window.line = new Chart(cpuCtx, cpuConfig);
+
+        var memCtx = document.getElementById("canvas_mem").getContext("2d");
+        new Chart(memCtx, memConfig);
+
+        var rssCtx = document.getElementById("canvas_rss").getContext("2d");
+        new Chart(rssCtx, rssConfig);
+
+        var vszCtx = document.getElementById("canvas_vsz").getContext("2d");
+        new Chart(vszCtx, vszConfig);
+    };
+</script>
+<div class="stats">
+    <canvas id="canvas_cpu" class="canvas"></canvas>
+</div>
+<div class="stats">
+    <canvas id="canvas_mem" class="canvas"></canvas>
+</div>
+<div class="stats">
+    <canvas id="canvas_vsz" class="canvas"></canvas>
+</div>
+<div class="stats">
+    <canvas id="canvas_rss" class="canvas"></canvas>
+</div>
+</body>
+</html>
