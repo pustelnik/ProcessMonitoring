@@ -1,21 +1,18 @@
-package com.monitor;
+package com.monitor.linux;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author jakub on 14.08.16.
  */
 @XmlRootElement
 class Processes implements Serializable {
-    static class ProcessStats {
+    @XmlType(propOrder = {"processName","time","cpu","mem","vsz","rss"})
+    static class ProcessStats implements Comparable<ProcessStats> {
         private String processName;
         private List<String> time;
         private List<String> cpu;
@@ -82,6 +79,17 @@ class Processes implements Serializable {
         public void setTime(List<String> time) {
             this.time = time;
         }
+
+        @Override
+        public int compareTo(ProcessStats o) {
+            if(o.getTime().size() == getTime().size()) {
+                return 0;
+            } else if(o.getTime().size() > getTime().size()) {
+                return 1;
+            } else {
+                return -1;
+            }
+        }
     }
 
     private List<ProcessStats> processes = new ArrayList<>();
@@ -97,11 +105,4 @@ class Processes implements Serializable {
         this.processes = processes;
     }
 
-    static Marshaller ProcessesMarshallel() throws JAXBException {
-        Map<String, Object> properties = new HashMap<String, Object>(2);
-        properties.put("eclipselink.media-type", "application/json");
-        properties.put("eclipselink.json.include-root", false);
-        JAXBContext jaxbContext = JAXBContext.newInstance(new Class[]{ProcessStats.class,Processes.class},properties);
-        return jaxbContext.createMarshaller();
-    }
 }

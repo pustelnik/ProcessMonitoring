@@ -10,24 +10,28 @@ import java.io.PipedOutputStream;
 /**
  * @author  jakub on 12.08.16.
  */
-public class SSHClientImpl implements SSHClient, Closeable {
+public class SshClientImpl implements RemoteClient, Closeable {
     private final JSch jSch = new JSch();
     private final String ip;
     private final String user;
     private final String password;
     private Session session;
 
-    public SSHClientImpl(String ip, String user, String password) {
+    public SshClientImpl(String ip, String user, String password) throws JSchException {
         this.ip = ip;
         this.user = user;
         this.password = password;
+    }
+
+    @Override
+    public void connect() throws ConnectionException {
         try {
             session = jSch.getSession(user,ip,22);
             session.setPassword(password);
             session.setConfig("StrictHostKeyChecking", "no");
             session.connect();
         } catch (JSchException e) {
-            e.printStackTrace();
+            throw new ConnectionException(e);
         }
     }
 
