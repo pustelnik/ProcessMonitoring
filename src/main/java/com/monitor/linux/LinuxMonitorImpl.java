@@ -31,6 +31,7 @@ import static akka.pattern.Patterns.ask;
  * @author jakub on 12.08.16.
  */
 public class LinuxMonitorImpl implements Monitor {
+    static final long START_TIME = System.currentTimeMillis()/1000;
     private static final Logger LOGGER = LogManager.getLogger(LinuxMonitorImpl.class);
     private final ActorSystem system = ActorSystem.create();
     private final ActorRef monitor;

@@ -6,7 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
-import java.time.LocalTime;
+
+import static com.monitor.linux.LinuxMonitorImpl.START_TIME;
 
 /**
  * linux command ps aux object representation
@@ -103,7 +104,7 @@ class LinuxPs implements Comparable<LinuxPs>, Serializable {
                 process[6], // tty
                 process[7], // stat
                 process[8], // start
-                LocalTime.now().toString(), // time
+                String.valueOf((System.currentTimeMillis()/1000)-START_TIME), // time in seconds
                 command); //command
     }
 

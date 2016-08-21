@@ -1,10 +1,30 @@
 <!doctype html>
-<html>
 <head>
+    <meta charset="UTF-8">
     <script src="Chart.bundle.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="data.js"></script>
     <style>
+        .canvas{
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+        .stats {
+            width: 80%;
+            margin-bottom: 10%;
+        }
+    </style>
+</head>
+<script>
+    va<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="Chart.bundle.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="data.js"></script>
+<style>
         .canvas{
             -moz-user-select: none;
             -webkit-user-select: none;
@@ -26,12 +46,23 @@
         return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
     };
 
+    function getScatter(n, m) {
+        var data = [];
+        for(j = 0; j < n.length; j++) {
+            data.push({
+                x: n[j],
+                y: m[j]
+            });
+        }
+        return data;
+    }
+
     function getCpuDatasets(processes) {
         var data = [];
         for(i = 0; i < processes.length; i++) {
             data.push({
                 label: processes[i].processName,
-                data: processes[i].cpu,
+                data: getScatter(processes[i].time,processes[i].cpu),
                 fill: false
             });
         }
@@ -43,7 +74,7 @@
         for(i = 0; i < processes.length; i++) {
             data.push({
                 label: processes[i].processName,
-                data: processes[i].mem,
+                data: getScatter(processes[i].time,processes[i].mem),
                 fill: false
             });
         }
@@ -55,7 +86,7 @@
         for(i = 0; i < processes.length; i++) {
             data.push({
                 label: processes[i].processName,
-                data: processes[i].rss,
+                data: getScatter(processes[i].time,processes[i].rss),
                 fill: false
             });
         }
@@ -67,7 +98,7 @@
         for(i = 0; i < processes.length; i++) {
             data.push({
                 label: processes[i].processName,
-                data: processes[i].vsz,
+                data: getScatter(processes[i].time,processes[i].vsz),
                 fill: false
             });
         }
@@ -117,22 +148,12 @@
             },
             scales: {
                 xAxes: [{
-                    display: true,
                     scaleLabel: {
                         display: true,
-                        labelString: 'Time'
-                    }
-                }],
-                yAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: '%'
+                        labelString: 'time in seconds'
                     },
-                    ticks: {
-                        suggestedMin: 0,
-                        suggestedMax: 100
-                    }
+                    type: 'linear',
+                    position: 'bottom'
                 }]
             }
         }
@@ -181,22 +202,12 @@
             },
             scales: {
                 xAxes: [{
-                    display: true,
                     scaleLabel: {
                         display: true,
-                        labelString: 'Process stats'
-                    }
-                }],
-                yAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: '%'
+                        labelString: 'time in seconds'
                     },
-                    ticks: {
-                        suggestedMin: 0,
-                        suggestedMax: 100
-                    }
+                    type: 'linear',
+                    position: 'bottom'
                 }]
             }
         }
@@ -212,7 +223,7 @@
             responsive: true,
             title:{
                 display:true,
-                text: "VSZ"
+                text: "VSZ (KiB)"
             },
             tooltips: {
                 mode: 'label',
@@ -245,22 +256,12 @@
             },
             scales: {
                 xAxes: [{
-                    display: true,
                     scaleLabel: {
                         display: true,
-                        labelString: 'Time'
-                    }
-                }],
-                yAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'KiB'
+                        labelString: 'time in seconds'
                     },
-                    ticks: {
-                        suggestedMin: 0,
-                        suggestedMax: 100
-                    }
+                    type: 'linear',
+                    position: 'bottom'
                 }]
             }
         }
@@ -276,7 +277,7 @@
             responsive: true,
             title:{
                 display:true,
-                text: "RSS"
+                text: "RSS (KiB)"
             },
             tooltips: {
                 mode: 'label',
@@ -309,22 +310,12 @@
             },
             scales: {
                 xAxes: [{
-                    display: true,
                     scaleLabel: {
                         display: true,
-                        labelString: 'Time'
-                    }
-                }],
-                yAxes: [{
-                    display: true,
-                    scaleLabel: {
-                        display: true,
-                        labelString: 'KiB'
+                        labelString: 'time in seconds'
                     },
-                    ticks: {
-                        suggestedMin: 0,
-                        suggestedMax: 250,
-                    }
+                    type: 'linear',
+                    position: 'bottom'
                 }]
             }
         }
