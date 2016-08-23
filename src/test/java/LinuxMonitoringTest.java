@@ -32,7 +32,7 @@ public class LinuxMonitoringTest extends TestConfig {
         Monitor linMonit = new LinuxMonitorImpl(linuxHost,linuxUsr,linuxPwd); // fill this with test data
         linMonit.startMonitoring(new String[]{"firefox","docker","xorg","bash"},15, TimeUnit.SECONDS);
         try {
-            Thread.sleep(1200000);
+            Thread.sleep(30000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

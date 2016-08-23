@@ -4,14 +4,13 @@ import akka.actor.*;
 import akka.japi.Creator;
 import akka.util.Timeout;
 import com.jcraft.jsch.JSchException;
+import com.monitor.BaseMonitor;
 import com.monitor.Monitor;
 import com.monitor.common.FileHandler;
 import com.monitor.common.MonitorMessages.*;
 import com.monitor.common.ProcessIsNotRunningException;
 import com.monitor.common.ProcessesMarshaller;
-import com.monitor.connection.ConnectionException;
 import com.monitor.connection.RemoteClient;
-import com.monitor.connection.RemoteCommandNotSendException;
 import com.monitor.connection.SshClientImpl;
 import com.sun.xml.internal.ws.Closeable;
 import org.apache.logging.log4j.LogManager;
@@ -24,13 +23,12 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-import static akka.actor.SupervisorStrategy.*;
 import static akka.pattern.Patterns.ask;
 
 /**
  * @author jakub on 12.08.16.
  */
-public class LinuxMonitorImpl implements Monitor {
+public class LinuxMonitorImpl extends BaseMonitor implements Monitor {
     static final long START_TIME = System.currentTimeMillis()/1000;
     private static final Logger LOGGER = LogManager.getLogger(LinuxMonitorImpl.class);
     private final ActorSystem system = ActorSystem.create();
@@ -109,17 +107,6 @@ public class LinuxMonitorImpl implements Monitor {
     private static class Monitoring extends UntypedActor {
         final ActorRef resultPrinter = getContext().actorOf(Props.create(MonitorResultPrinter.class),"resultPrinter");
         final ActorRef remoteClient;
-
-        private static SupervisorStrategy strategy = new OneForOneStrategy(20, Duration.create(3, TimeUnit.MINUTES), t -> {
-            if(t instanceof ConnectionException) {
-                return stop();
-            } else if(t instanceof RemoteCommandNotSendException){
-                LOGGER.debug("Exception {}, restarting...",t.getMessage());
-                return restart();
-            }  else {
-                return escalate();
-            }
-        });
 
         @Override
         public SupervisorStrategy supervisorStrategy() {

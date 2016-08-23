@@ -3,6 +3,7 @@ package com.monitor.windows;
 import akka.actor.*;
 import akka.japi.Creator;
 import akka.util.Timeout;
+import com.monitor.BaseMonitor;
 import com.monitor.Monitor;
 import com.monitor.common.FileHandler;
 import com.monitor.common.MonitorMessages.Response;
@@ -29,7 +30,8 @@ import static akka.pattern.Patterns.ask;
 /**
  * @author jakub on 19.08.16.
  */
-public class WindowsMonitorImpl implements Monitor {
+public class WindowsMonitorImpl extends BaseMonitor implements Monitor {
+    static final long START_TIME = System.currentTimeMillis()/1000;
     private static final Logger LOGGER = LogManager.getLogger(WindowsMonitorImpl.class);
     private final ActorSystem system = ActorSystem.create();
     private final ActorRef monitor;
@@ -94,10 +96,14 @@ public class WindowsMonitorImpl implements Monitor {
         new FileHandler("windowsProcessStats.html").copyMonitoringResults(targetPath);
     }
 
-    // todo add fault strategy
     private static class WindowsMonitor extends UntypedActor {
         private final ActorRef results = getContext().actorOf(Props.create(MonitorResultKeeper.class),"resultsKeeper");
         private final ActorRef telnet;
+
+        @Override
+        public SupervisorStrategy supervisorStrategy() {
+            return strategy;
+        }
 
         public WindowsMonitor(String host, int port, String usr, String pwd) {
             telnet = getContext().actorOf(TelnetActor.props(host,port,usr,pwd),"telnetClient");

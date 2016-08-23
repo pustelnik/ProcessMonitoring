@@ -14,9 +14,9 @@ public class WindowsWindowsMonitorTest extends TestConfig
     @Test
     public void shouldMonitorWindows() {
         Monitor windowsMonitor = new WindowsMonitorImpl(windowsHost,windowsPort,windowsUsr,windowsPwd);
-        windowsMonitor.startMonitoring(new String[]{"explorer"},15, TimeUnit.SECONDS);
+        windowsMonitor.startMonitoring(new String[]{"prime95","iexplore"},15, TimeUnit.SECONDS);
         try {
-            Thread.sleep(600000);
+            Thread.sleep(300000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

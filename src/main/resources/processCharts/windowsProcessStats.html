@@ -26,12 +26,23 @@
         return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',' + (opacity || '.3') + ')';
     };
 
+    function getScatter(n, m) {
+        var data = [];
+        for(j = 0; j < n.length; j++) {
+            data.push({
+                x: n[j],
+                y: m[j]
+            });
+        }
+        return data;
+    }
+
     function getNpmDatasets(processes) {
         var data = [];
         for(i = 0; i < processes.length; i++) {
             data.push({
                 label: processes[i].processName,
-                data: processes[i].npm,
+                data: getScatter(processes[i].time,processes[i].npm),
                 fill: false
             });
         }
@@ -43,7 +54,7 @@
         for(i = 0; i < processes.length; i++) {
             data.push({
                 label: processes[i].processName,
-                data: processes[i].pm,
+                data: getScatter(processes[i].time,processes[i].pm),
                 fill: false
             });
         }
@@ -55,7 +66,7 @@
         for(i = 0; i < processes.length; i++) {
             data.push({
                 label: processes[i].processName,
-                data: processes[i].ws,
+                data: getScatter(processes[i].time,processes[i].ws),
                 fill: false
             });
         }
@@ -67,7 +78,7 @@
         for(i = 0; i < processes.length; i++) {
             data.push({
                 label: processes[i].processName,
-                data: processes[i].vm,
+                data: getScatter(processes[i].time,processes[i].vm),
                 fill: false
             });
         }
@@ -79,7 +90,7 @@
         for(i = 0; i < processes.length; i++) {
             data.push({
                 label: processes[i].processName,
-                data: processes[i].cpu,
+                data: getScatter(processes[i].time,processes[i].cpu),
                 fill: false
             });
         }
@@ -104,9 +115,9 @@
                     // beforeTitle: function() {
                     //     return '...beforeTitle';
                     // },
-                     afterTitle: function() {
-                         return 'The amount of non-paged memory that the process is using, in kilobytes';
-                     }
+                    afterTitle: function() {
+                        return 'The amount of non-paged memory that the process is using, in kilobytes';
+                    }
                     // beforeBody: function() {
                     //     return '...beforeBody';
                     // },
@@ -168,9 +179,9 @@
                     // beforeTitle: function() {
                     //     return '...beforeTitle';
                     // },
-                     afterTitle: function() {
-                         return 'The amount of pageable memory that the process is using, in kilobytes';
-                     }
+                    afterTitle: function() {
+                        return 'The amount of pageable memory that the process is using, in kilobytes';
+                    }
                     // beforeBody: function() {
                     //     return '...beforeBody';
                     // },
@@ -232,9 +243,9 @@
                     // beforeTitle: function() {
                     //     return '...beforeTitle';
                     // },
-                     afterTitle: function() {
-                         return 'The size of the working set of the process, in kilobytes. The working set consists of the pages of memory that were recently referenced by the process';
-                     }
+                    afterTitle: function() {
+                        return 'The size of the working set of the process, in kilobytes. The working set consists of the pages of memory that were recently referenced by the process';
+                    }
                     // beforeBody: function() {
                     //     return '...beforeBody';
                     // },
@@ -296,9 +307,9 @@
                     // beforeTitle: function() {
                     //     return '...beforeTitle';
                     // },
-                     afterTitle: function() {
-                         return 'The amount of virtual memory that the process is using, in megabytes. Virtual memory includes storage in the paging files on disk';
-                     }
+                    afterTitle: function() {
+                        return 'The amount of virtual memory that the process is using, in megabytes. Virtual memory includes storage in the paging files on disk';
+                    }
                     // beforeBody: function() {
                     //     return '...beforeBody';
                     // },
@@ -360,9 +371,9 @@
                     // beforeTitle: function() {
                     //     return '...beforeTitle';
                     // },
-                     afterTitle: function() {
-                         return 'The amount of processor time that the process has used on all processors, in seconds';
-                     }
+                    afterTitle: function() {
+                        return 'The amount of processor time that the process has used on all processors, in seconds';
+                    }
                     // beforeBody: function() {
                     //     return '...beforeBody';
                     // },
@@ -406,7 +417,6 @@
         }
     };
 
-
     $.each(npmConfig.data.datasets,function(i, dataset) {
         dataset.borderColor = randomColor(0.4);
         dataset.backgroundColor = dataset.borderColor;
@@ -426,7 +436,7 @@
         dataset.backgroundColor = dataset.borderColor;
         dataset.pointBorderColor = dataset.borderColor;
         dataset.pointBackgroundColor = dataset.borderColor;
-        dataset.pointBorderWidth = 2;
+        dataset.pointBorderWidth = 1;
     });
     $.each(vmConfig.data.datasets,function(i, dataset) {
         dataset.borderColor = randomColor(0.4);

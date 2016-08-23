@@ -3,8 +3,8 @@ package com.monitor.windows;
 import com.monitor.common.ProcessIsNotRunningException;
 
 import java.io.Serializable;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+
+import static com.monitor.windows.WindowsMonitorImpl.START_TIME;
 
 /**
  * @author jakub on 19.08.16.
@@ -34,7 +34,7 @@ public class WindowsPs implements Comparable<WindowsPs>, Serializable{
         this.cpu = cpu;
         this.processName = processName;
         this.id = id;
-        this.time = LocalTime.now().format(DateTimeFormatter.ISO_LOCAL_TIME);
+        this.time = String.valueOf((System.currentTimeMillis()/1000)-START_TIME); // time in seconds
     }
 
     /**

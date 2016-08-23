@@ -2,7 +2,6 @@ package com.monitor.windows;
 
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
-import java.time.LocalTime;
 import java.util.List;
 
 /**
@@ -97,9 +96,15 @@ public class Processes implements Serializable {
             } else if(o.getTime().isEmpty() && !o.getTime().isEmpty()) {
                 return -1;
             } else {
-                LocalTime obj = LocalTime.parse(o.getTime().get(0));
-                LocalTime local = LocalTime.parse(getTime().get(0));
-                return obj.compareTo(local);
+                long a = Long.parseLong(o.getTime().get(0));
+                long b = Long.parseLong(getTime().get(0));
+                if(a == b) {
+                    return 0;
+                } else if(a > b) {
+                    return 1;
+                } else {
+                    return -1;
+                }
             }
         }
     }
